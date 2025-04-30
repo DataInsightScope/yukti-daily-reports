@@ -2,26 +2,28 @@ name: Run Yukti Daily Report
 
 on:
   schedule:
-    - cron: '0 12 * * *'  # Runs daily at 5:30 PM IST (adjust if needed)
+    - cron: '0 12 * * *'  # 12:00 UTC = 5:30 PM IST
   workflow_dispatch:
 
 jobs:
-  run-notebook:
+  run:
     runs-on: ubuntu-latest
+
     steps:
-    - name: Checkout repo
-      uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: 3.10
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'  # Explicit and stable version
 
-    - name: Install dependencies
-      run: |
-        pip install requests nbconvert
+      - name: Install dependencies
+        run: |
+          pip install notebook requests
 
-    - name: Run notebook
-      run: |
-        jupyter nbconvert --to script yukti_daily_report.ipynb
-        python yukti_daily_report.py
+      - name: Convert notebook to script
+        run: jupyter nbconvert --to script yukti_daily_report.ipynb
+
+      - name: Run Python script
+        run: python yukti_daily_report.py
